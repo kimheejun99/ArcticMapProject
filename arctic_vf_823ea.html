@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Seoul Map with Clustered Markers</title>
+  <meta charset="utf-8">
+  <style>
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+  </style>
+  <!-- 클러스터링 라이브러리 -->
+  <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+</head>
+<body>
+  <div id="map"></div>
+
+  <script>
+    const data = [
+     
+{ name: "PRJNA818854", lat: 77.0, lng: 15.54, info: "SAMN26885852", group: "SRR18468278" },
+{ name: "PRJEB43085", lat: 65.225, lng: -19.71194444, info: "SAMEA8223863", group: "ERR5443762" },
+{ name: "PRJEB43085", lat: 65.8738889, lng: -17.04777778, info: "SAMEA8223876", group: "ERR5443775" },
+{ name: "PRJNA921896", lat: 78.89, lng: 12.15, info: "SAMN32638135", group: "SRR23071390" },
+{ name: "PRJNA888228", lat: 78.92, lng: 11.93, info: "SAMN31760883", group: "SRR22316775" },
+{ name: "PRJNA888228", lat: 78.92, lng: 11.93, info: "SAMN31760891", group: "SRR22316786" },
+{ name: "PRJNA888228", lat: 78.92, lng: 11.93, info: "SAMN31760890", group: "SRR22316787" },
+{ name: "PRJNA888228", lat: 78.92, lng: 11.93, info: "SAMN31760889", group: "SRR22316788" },
+{ name: "PRJNA888228", lat: 78.92, lng: 11.93, info: "SAMN31760886", group: "SRR22316791" },
+{ name: "PRJNA888228", lat: 78.92, lng: 11.93, info: "SAMN31760875", group: "SRR22316794" },
+{ name: "PRJNA944391", lat: 78.89843333, lng: 12.05368333, info: "SAMN33747186", group: "SRR23911158" },
+{ name: "PRJEB59067", lat: 78.89694, lng: 12.06806, info: "SAMEA112352767", group: "ERR10878207" },
+{ name: "PRJEB59067", lat: 78.89917, lng: 12.07056, info: "SAMEA112352768", group: "ERR10878208" },
+{ name: "PRJEB59067", lat: 78.89556, lng: 12.06806, info: "SAMEA112352769", group: "ERR10878209" },
+{ name: "PRJEB25358", lat: 70.0602, lng: -138.2121, info: "SAMEA104707365", group: "ERR2431950" },
+{ name: "PRJNA375628", lat: 71.299, lng: -156.61, info: "SAMN06343930", group: "SRR5659263" },
+{ name: "PRJNA375629", lat: 71.299, lng: -156.61, info: "SAMN06343931", group: "SRR5660398" },
+{ name: "PRJNA330300", lat: 71.2999, lng: -156.61, info: "SAMN05422050", group: "SRR3985368" },
+{ name: "PRJNA330295", lat: 71.2999, lng: -156.61, info: "SAMN05421613", group: "SRR3985369" },
+{ name: "PRJNA330307", lat: 71.2999, lng: -156.61, info: "SAMN05422046", group: "SRR3985383" },
+{ name: "PRJNA330310", lat: 71.2999, lng: -156.61, info: "SAMN05422044", group: "SRR3985384" },
+{ name: "PRJNA330278", lat: 71.2999, lng: -156.61, info: "SAMN05422088", group: "SRR3985391" },
+{ name: "PRJNA330279", lat: 71.2999, lng: -156.61, info: "SAMN05422087", group: "SRR3985396" },
+{ name: "PRJNA330296", lat: 71.2999, lng: -156.61, info: "SAMN05422055", group: "SRR3985527" },
+{ name: "PRJNA330305", lat: 71.2999, lng: -156.61, info: "SAMN05422250", group: "SRR3985624" },
+{ name: "PRJNA330063", lat: 71.28381, lng: -156.5985, info: "SAMN05422033", group: "SRR3989239" },
+{ name: "PRJNA330165", lat: 71.28381, lng: -156.5985, info: "SAMN05422029", group: "SRR3989255" },
+{ name: "PRJNA330164", lat: 71.28381, lng: -156.5985, info: "SAMN05422242", group: "SRR3989256" },
+{ name: "PRJNA330166", lat: 71.270939, lng: -156.810374, info: "SAMN05422028", group: "SRR3989257" },
+{ name: "PRJNA330167", lat: 71.270939, lng: -156.810374, info: "SAMN05421714", group: "SRR3989259" },
+{ name: "PRJNA330168", lat: 71.290884, lng: -156.788063, info: "SAMN05422027", group: "SRR3989260" },
+{ name: "PRJNA330303", lat: 71.2999, lng: -156.61, info: "SAMN05421614", group: "SRR3985370" },
+{ name: "PRJNA330288", lat: 71.2999, lng: -156.61, info: "SAMN05422069", group: "SRR3985418" },
+{ name: "PRJNA330301", lat: 71.2999, lng: -156.61, info: "SAMN05421909", group: "SRR3985526" },
+{ name: "PRJNA365644", lat: 68.6139, lng: -149.3145, info: "SAMN06264825", group: "SRR5450431" },
+{ name: "PRJNA375507", lat: 68.3533, lng: 19.0475, info: "SAMN06344032", group: "SRR5493734" },
+{ name: "PRJNA375376", lat: 68.3533, lng: 19.0466, info: "SAMN06344034", group: "SRR5493777" },
+{ name: "PRJNA365103", lat: 68.6137, lng: -149.3144, info: "SAMN06266083", group: "SRR5471030" },
+{ name: "PRJNA365101", lat: 68.6137, lng: -149.3144, info: "SAMN06266082", group: "SRR5471032" },
+{ name: "PRJNA259156", lat: 73.763167, lng: 8.464, info: "SAMN03002196", group: "SRR1555748" },
+{ name: "PRJNA504765", lat: 73.756333, lng: 8.455167, info: "SAMN10404972", group: "SRR8452062" },
+{ name: "PRJEB20765", lat: 71.3, lng: -156.5, info: "SAMEA104055714", group: "ERR1960503" },
+{ name: "PRJEB20765", lat: 71.3, lng: -156.5, info: "SAMEA104055716", group: "ERR1960505" },
+{ name: "PRJEB20765", lat: 71.3, lng: -156.5, info: "SAMEA104055720", group: "ERR1960509" },
+{ name: "PRJEB20765", lat: 71.3, lng: -156.5, info: "SAMEA104055722", group: "ERR1960511" },
+{ name: "PRJEB20765", lat: 71.3, lng: -156.5, info: "SAMEA104055726", group: "ERR1960515" },
+{ name: "PRJNA753945", lat: 71.189196, lng: -156.572292, info: "SAMN20718443", group: "SRR15421250" },
+{ name: "PRJNA753945", lat: 70.068389, lng: -156.105889, info: "SAMN20718441", group: "SRR15421252" },
+{ name: "PRJNA753945", lat: 68.623403, lng: -149.584545, info: "SAMN20718494", group: "SRR15421256" },
+{ name: "PRJNA753945", lat: 68.623527, lng: -149.584645, info: "SAMN20718492", group: "SRR15421259" },
+{ name: "PRJNA753945", lat: 68.623527, lng: -149.584645, info: "SAMN20718491", group: "SRR15421260" },
+{ name: "PRJNA753945", lat: 71.251608, lng: -156.542146, info: "SAMN20718489", group: "SRR15421262" },
+{ name: "PRJNA753945", lat: 71.251608, lng: -156.542146, info: "SAMN20718488", group: "SRR15421263" },
+{ name: "PRJNA753945", lat: 71.251669, lng: -156.542107, info: "SAMN20718486", group: "SRR15421265" },
+{ name: "PRJNA753945", lat: 70.068476, lng: -156.105802, info: "SAMN20718439", group: "SRR15421268" },
+{ name: "PRJNA753945", lat: 71.251768, lng: -156.542005, info: "SAMN20718482", group: "SRR15421270" },
+{ name: "PRJNA753945", lat: 71.296, lng: -156.554483, info: "SAMN20718474", group: "SRR15421278" },
+{ name: "PRJNA753945", lat: 71.298317, lng: -156.5389, info: "SAMN20718469", group: "SRR15421284" },
+{ name: "PRJNA753945", lat: 70.068559, lng: -156.105719, info: "SAMN20718436", group: "SRR15421301" },
+{ name: "PRJNA753945", lat: 70.998542, lng: -156.521316, info: "SAMN20718453", group: "SRR15421302" },
+{ name: "PRJNA753945", lat: 71.188863, lng: -156.57256, info: "SAMN20718450", group: "SRR15421305" },
+{ name: "PRJNA753945", lat: 71.189085, lng: -156.572434, info: "SAMN20718448", group: "SRR15421307" },
+{ name: "PRJNA753945", lat: 71.189196, lng: -156.572292, info: "SAMN20718445", group: "SRR15421310" },
+{ name: "PRJNA753945", lat: 71.189196, lng: -156.572292, info: "SAMN20718444", group: "SRR15421311" },
+{ name: "PRJNA753945", lat: 70.068559, lng: -156.105719, info: "SAMN20718434", group: "SRR15421313" },
+{ name: "PRJNA627971", lat: 64.859, lng: -147.855, info: "SAMN14692983", group: "SRR11653785" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054781", group: "SRR13327979" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054789", group: "SRR13327986" },
+{ name: "PRJNA684363", lat: 64.875646, lng: -147.668981, info: "SAMN17054854", group: "SRR13328023" },
+{ name: "PRJNA684363", lat: 64.875646, lng: -147.668981, info: "SAMN17054864", group: "SRR13328034" },
+{ name: "PRJNA684363", lat: 64.875646, lng: -147.668981, info: "SAMN17054865", group: "SRR13328035" },
+{ name: "PRJNA684363", lat: 64.876108, lng: -147.667695, info: "SAMN17054808", group: "SRR13328120" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054802", group: "SRR13328126" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054799", group: "SRR13328130" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054793", group: "SRR13328136" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054792", group: "SRR13328137" },
+{ name: "PRJEB42019", lat: 80.33333333, lng: 52.78333333, info: "SAMEA7723947", group: "ERR5001990" },
+{ name: "PRJEB42019", lat: 80.76666667, lng: 54.65, info: "SAMEA7723948", group: "ERR5001991" },
+{ name: "PRJEB42019", lat: 80.76666667, lng: 54.65, info: "SAMEA7723477", group: "ERR5001993" },
+{ name: "PRJEB42019", lat: 80.76666667, lng: 54.65, info: "SAMEA7723948", group: "ERR5004750" },
+{ name: "PRJNA556841", lat: 81.80343, lng: -70.50447, info: "SAMN12368159", group: "SRR9952632" },
+{ name: "PRJNA556841", lat: 81.8415, lng: -70.85175, info: "SAMN12368157", group: "SRR9952633" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054779", group: "SRR13327977" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054785", group: "SRR13327982" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054791", group: "SRR13327988" },
+{ name: "PRJNA684363", lat: 64.876108, lng: -147.667695, info: "SAMN17054829", group: "SRR13327997" },
+{ name: "PRJNA684363", lat: 64.875646, lng: -147.668981, info: "SAMN17054862", group: "SRR13328032" },
+{ name: "PRJNA684363", lat: 64.875646, lng: -147.668981, info: "SAMN17054863", group: "SRR13328033" },
+{ name: "PRJNA684363", lat: 64.876108, lng: -147.667695, info: "SAMN17054819", group: "SRR13328108" },
+{ name: "PRJNA684363", lat: 64.876108, lng: -147.667695, info: "SAMN17054818", group: "SRR13328109" },
+{ name: "PRJNA684363", lat: 64.876108, lng: -147.667695, info: "SAMN17054816", group: "SRR13328111" },
+{ name: "PRJNA684363", lat: 64.876108, lng: -147.667695, info: "SAMN17054810", group: "SRR13328118" },
+{ name: "PRJNA684363", lat: 64.876509, lng: -147.666514, info: "SAMN17054797", group: "SRR13328132" },
+{ name: "PRJEB42019", lat: 80.33333333, lng: 52.78333333, info: "SAMEA7723947", group: "ERR5003269" },
+{ name: "PRJEB42019", lat: 80.76666667, lng: 54.65, info: "SAMEA7723948", group: "ERR5003270" },
+{ name: "PRJEB42019", lat: 80.76666667, lng: 54.65, info: "SAMEA7723478", group: "ERR5003273" },
+{ name: "PRJEB42019", lat: 80.76666667, lng: 54.65, info: "SAMEA7723948", group: "ERR5003963" },
+{ name: "PRJEB42019", lat: 80.76666667, lng: 54.65, info: "SAMEA7723477", group: "ERR5003965" },
+{ name: "PRJEB34384", lat: 79.076724, lng: -90.21097, info: "SAMEA5787381", group: "ERR3534806" },
+{ name: "PRJNA728249", lat: 64.54, lng: -51.12, info: "SAMN19236418", group: "SRR14573564" },
+{ name: "PRJNA728249", lat: 69.27, lng: -53.45, info: "SAMN19236419", group: "SRR14573565" },
+{ name: "PRJNA728249", lat: 71.26, lng: -52.6, info: "SAMN19236421", group: "SRR14573567" },
+{ name: "PRJNA728249", lat: 80.82, lng: -66.39, info: "SAMN19236423", group: "SRR14573569" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681573" },
+{ name: "PRJNA1149319", lat: 68.47, lng: -149.49, info: "SAMN43778684", group: "SRR30681587" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681595" },
+{ name: "PRJNA1149319", lat: 68.47, lng: -149.49, info: "SAMN43778684", group: "SRR30681599" },
+{ name: "PRJNA1149319", lat: 68.47, lng: -149.49, info: "SAMN43778684", group: "SRR30681602" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681606" },
+{ name: "PRJNA1149319", lat: 69.14, lng: 148.84, info: "SAMN43778683", group: "SRR30681611" },
+{ name: "PRJNA1149319", lat: 69.14, lng: 148.84, info: "SAMN43778683", group: "SRR30681613" },
+{ name: "PRJNA1149319", lat: 69.14, lng: 148.84, info: "SAMN43778683", group: "SRR30681614" },
+{ name: "PRJNA1149319", lat: 69.14, lng: 148.84, info: "SAMN43778683", group: "SRR30681619" },
+{ name: "PRJNA1149319", lat: 69.67, lng: -148.71, info: "SAMN43778682", group: "SRR30681622" },
+{ name: "PRJNA1149319", lat: 69.67, lng: -148.71, info: "SAMN43778682", group: "SRR30681624" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681628" },
+{ name: "PRJNA1149319", lat: 69.67, lng: -148.71, info: "SAMN43778682", group: "SRR30681631" },
+{ name: "PRJNA1149319", lat: 69.96, lng: -148.73, info: "SAMN43778681", group: "SRR30681637" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681650" },
+{ name: "PRJNA1149319", lat: 69.96, lng: -148.73, info: "SAMN43778681", group: "SRR30681651" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681662" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681684" },
+{ name: "PRJNA1149319", lat: 70.16, lng: -148.46, info: "SAMN43778680", group: "SRR30681717" },
+{ name: "PRJNA1219197", lat: 78.55, lng: 11.5, info: "SAMN46547845", group: "SRR32260029" },
+{ name: "PRJNA1219197", lat: 78.55, lng: 11.5, info: "SAMN46547845", group: "SRR32260032" }
+    ];
+
+    function initMap() {
+      const center = { lat: 37.5665, lng: 126.9780 }; // 서울 중심
+      const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 11,
+        center: center,
+      });
+
+      const infoWindow = new google.maps.InfoWindow();
+      const markers = data.map(loc => {
+        const marker = new google.maps.Marker({
+          position: { lat: loc.lat, lng: loc.lng },
+          title: loc.name,
+        });
+
+        marker.addListener("mouseover", () => {
+          infoWindow.setContent(`<strong>${loc.name}</strong><br>${loc.info}<br>(${loc.group})`);
+          infoWindow.open(map, marker);
+        });
+
+        marker.addListener("mouseout", () => {
+          infoWindow.close();
+        });
+
+        return marker;
+      });
+
+      // 클러스터링 적용
+      new markerClusterer.MarkerClusterer({ map, markers });
+    }
+  </script>
+
+  <!-- 지도 API 불러오기 -->
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwxR1hcuCpu2y1vXmQN0AXUnefNnRY604&callback=initMap">
+  </script>
+</body>
+</html>
